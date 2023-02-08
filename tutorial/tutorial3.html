@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>ArcGIS Maps SDK for JavaScript Tutorials: Display a Web Map</title>
+  <title>ArcGIS Maps SDK for JavaScript Tutorials: Add a feature layer</title>
   <style>
     html, body, #viewDiv {
       padding: 0;
@@ -17,43 +17,52 @@
   <script src="https://js.arcgis.com/4.25/"></script>
 
   <script>
-    require([
-      "esri/config",
-      "esri/Map",
-      "esri/WebMap",
-      "esri/views/MapView",
-      "esri/widgets/ScaleBar",
-      "esri/widgets/Legend"
-    ], function(esriConfig, WebMap, MapView, ScaleBar, Legend) {
+  require([
+    "esri/config",
+    "esri/Map",
+    "esri/views/MapView",
 
-    // esriConfig.apiKey = "AAPKe81a7793375745a4b54e9f62595cf0ff7Ul5kvBMl0C9jcbufCE1U4ub0ML6pi7-K47vkiYYOJZJRZs8PU5wXzAlMOfOpBWi";
+    "esri/layers/FeatureLayer"
 
-      const webmap = new WebMap({
-        portalItem: {
-          id: "41281c51f9de45edaf1c8ed44bb10e30"
-        }
-      });
+  ], function(esriConfig,Map, MapView, FeatureLayer) {
 
-      const view = new MapView({
-        container: "viewDiv",
+  esriConfig.apiKey = "AAPKe81a7793375745a4b54e9f62595cf0ff7Ul5kvBMl0C9jcbufCE1U4ub0ML6pi7-K47vkiYYOJZJRZs8PU5wXzAlMOfOpBWi";
 
-        map: webmap
+  const map = new Map({
+    basemap: "arcgis-topographic"
+  });
 
-      });
+  const view = new MapView({
+    container: "viewDiv",
+    map: map,
+    center: [-118.80543,34.02700],
+    zoom: 13
+  });
 
-      const scalebar = new ScaleBar({
-        view: view
-      });
+//Trailheads feature layer (points)
+  const trailheadsLayer = new FeatureLayer({
+    url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads/FeatureServer/0"
+  });
 
-      view.ui.add(scalebar, "bottom-left");
+  map.add(trailheadsLayer);
 
-    const legend = new Legend ({
-        view: view
-      });
-      view.ui.add(legend, "top-right");
+//Trails feature layer (lines)
+  const trailsLayer = new FeatureLayer({
+    url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trails/FeatureServer/0"
+  });
+
+  map.add(trailsLayer, 0);
+
+// Parks and open spaces (polygons)
+  const parksLayer = new FeatureLayer({
+    url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Parks_and_Open_Space/FeatureServer/0"
+  });
+
+  map.add(parksLayer, 0);
 
   });
-  </script>
+</script>
+
 </head>
 <body>
   <div id="viewDiv"></div>
